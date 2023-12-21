@@ -1,0 +1,47 @@
+version: '3.4'
+
+volumes:
+  grafana-storage:
+    external: false
+  loki-storage:
+    external: false
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - 3000:3000
+      #- 9080:9080
+      #- 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - grafana
+      - loki
+      - promtail
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss
+    # ports:
+    #   #- 3000:3000
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  loki:
+    container_name: loki
+    image: grafana/loki
+    # ports:
+    #   - 3100:3100
+    volumes:
+      - loki-storage:/loki
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail
+    # ports:
+    #   #- 9080:9080
+    volumes:
+      - ./promtail.yaml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
