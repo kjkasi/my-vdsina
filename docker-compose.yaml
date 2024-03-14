@@ -32,10 +32,12 @@ services:
   loki:
     container_name: loki
     image: grafana/loki
+    command: "-config.file=/etc/loki/config.yaml"
     # ports:
     #   - 3100:3100
     volumes:
       - loki-storage:/loki
+      - ./loki-config.yaml:/etc/loki/config.yaml
 
   promtail:
     container_name: promtail
@@ -45,3 +47,70 @@ services:
     volumes:
       - ./promtail.yaml:/etc/promtail/config.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock
+
+  wireguard:
+    container_name: wireguard
+    image: ghcr.io/wg-easy/wg-easy
+    environment:
+      - WG_HOST=0.0.0.0
+      - PASSWORD=${WG_PASSWORD}
+      - LANG=ru
+      - UI_TRAFFIC_STATS=true
+    # volumes:
+      # - ~/.wg-easy:/etc/wireguard
+    ports:
+      - 51820:51820/udp
+      - 51821:51821/tcp
+    cap_add: 
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1
+    restart: unless-stopped
+
+  shadowsocks:
+    container_name: shadowsocks
+    image: ghcr.io/shadowsocks/ssserver-rust
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /etc/shadowsocks-rust/config.json
+        {
+          "server": "0.0.0.0",
+          "server_port": 8388,
+          "password": "${SHADOWSOCKS_PASSWORD}",
+          "method": "aes-256-gcm",
+        }
+        EOF
+        ssserver --log-without-time -a nobody -c /etc/shadowsocks-rust/config.json
+    ports:
+      - 8388:8388
+    restart: unless-stopped
+
+  torrserver:
+    image: ghcr.io/yourok/torrserver
+    container_name: torrserver
+    environment:
+      - TS_PORT=5665
+      - TS_DONTKILL=1
+      - TS_HTTPAUTH=1
+      - TS_CONF_PATH=/opt/ts/config
+      - TS_TORR_DIR=/opt/ts/torrents
+    volumes:
+      - './CACHE:/opt/ts/torrents'
+      - './CONFIG:/opt/ts/config'
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /opt/ts/config/accs.db
+        {
+          "admin": "${TS_PASSWORD}"
+        }
+        EOF
+        /docker-entrypoint.sh
+    ports:
+      - '5665:5665'
+    restart: unless-stopped
