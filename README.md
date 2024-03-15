@@ -26,6 +26,7 @@ apt install git
 git clone
 
 cat <<EOF > .env
+WG_HOST=0.0.0.0
 WG_PASSWORD="<PSWD>"
 SHADOWSOCKS_PASSWORD="<PSWD>"
 TS_PASSWORD="<PSWD>"

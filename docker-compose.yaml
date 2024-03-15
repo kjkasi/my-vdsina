@@ -52,7 +52,7 @@ services:
     container_name: wireguard
     image: ghcr.io/wg-easy/wg-easy
     environment:
-      - WG_HOST=0.0.0.0
+      - WG_HOST=${WG_HOST}
       - PASSWORD=${WG_PASSWORD}
       - LANG=ru
       - UI_TRAFFIC_STATS=true
