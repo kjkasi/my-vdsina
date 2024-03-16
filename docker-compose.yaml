@@ -56,6 +56,7 @@ services:
       - PASSWORD=${WG_PASSWORD}
       - LANG=ru
       - UI_TRAFFIC_STATS=true
+      - WG_ALLOWED_IPS=${WG_ALLOWED_IPS}
     # volumes:
       # - ~/.wg-easy:/etc/wireguard
     ports:
