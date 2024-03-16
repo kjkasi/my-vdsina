@@ -57,8 +57,8 @@ services:
       - LANG=ru
       - UI_TRAFFIC_STATS=true
       - WG_ALLOWED_IPS=${WG_ALLOWED_IPS}
-    # volumes:
-      # - ~/.wg-easy:/etc/wireguard
+    volumes:
+      - ~/.wg-easy:/etc/wireguard
     ports:
       - 51820:51820/udp
       - 51821:51821/tcp
