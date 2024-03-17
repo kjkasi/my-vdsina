@@ -6,7 +6,7 @@ version: '3.4'
 #   loki-storage:
 #     external: false
 
-# services:
+services:
 #   nginx:
 #     container_name: nginx
 #     image: nginx
