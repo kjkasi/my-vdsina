@@ -47,8 +47,8 @@ services:
               httpHeaderValue1: "tenant1"
         EOF
         /run.sh
-    # volumes:
-      # - grafana-storage:/var/lib/grafana
+    volumes:
+      - grafana-storage:/var/lib/grafana
       #- ./ds.yaml:/usr/share/grafana/conf/provisioning/datasources/ds.yaml
 
   loki:
