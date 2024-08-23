@@ -1,10 +1,10 @@
-version: '3.4'
+version: '3'
 
-volumes:
-  grafana-storage:
-    external: false
-  loki-storage:
-    external: false
+# volumes:
+#   grafana-storage:
+#     external: false
+#   loki-storage:
+#     external: false
 
 services:
   # nginx:
