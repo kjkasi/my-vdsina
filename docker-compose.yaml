@@ -7,68 +7,68 @@ volumes:
     external: false
 
 services:
-  nginx:
-    container_name: nginx
-    image: nginx
-    ports:
-      - 3000:3000
-      #- 9080:9080
-      #- 443:443
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - grafana
-      - loki
-      - promtail
+  # nginx:
+  #   container_name: nginx
+  #   image: nginx
+  #   ports:
+  #     - 3000:3000
+  #     #- 9080:9080
+  #     #- 443:443
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - grafana
+  #     - loki
+  #     - promtail
 
-  grafana:
-    container_name: grafana
-    image: grafana/grafana-oss
-    # ports:
-    #   #- 3000:3000
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
-      - GF_AUTH_ANONYMOUS_ENABLED=false
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-          - name: Loki
-            type: loki
-            access: proxy
-            url: http://loki:3100
-            jsonData:
-              httpHeaderName1: "X-Scope-OrgID"
-            secureJsonData:
-              httpHeaderValue1: "tenant1"
-        EOF
-        /run.sh
-    volumes:
-      - grafana-storage:/var/lib/grafana
-      #- ./ds.yaml:/usr/share/grafana/conf/provisioning/datasources/ds.yaml
+  # grafana:
+  #   container_name: grafana
+  #   image: grafana/grafana-oss
+  #   # ports:
+  #   #   #- 3000:3000
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+  #     - GF_AUTH_ANONYMOUS_ENABLED=false
+  #   entrypoint:
+  #     - sh
+  #     - -euc
+  #     - |
+  #       mkdir -p /etc/grafana/provisioning/datasources
+  #       cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+  #       apiVersion: 1
+  #       datasources:
+  #         - name: Loki
+  #           type: loki
+  #           access: proxy
+  #           url: http://loki:3100
+  #           jsonData:
+  #             httpHeaderName1: "X-Scope-OrgID"
+  #           secureJsonData:
+  #             httpHeaderValue1: "tenant1"
+  #       EOF
+  #       /run.sh
+  #   volumes:
+  #     - grafana-storage:/var/lib/grafana
+  #     #- ./ds.yaml:/usr/share/grafana/conf/provisioning/datasources/ds.yaml
 
-  loki:
-    container_name: loki
-    image: grafana/loki
-    command: "-config.file=/etc/loki/config.yaml"
-    # ports:
-    #   - 3100:3100
-    volumes:
-      # - loki-storage:/loki
-      - ./loki-config.yaml:/etc/loki/config.yaml
+  # loki:
+  #   container_name: loki
+  #   image: grafana/loki
+  #   command: "-config.file=/etc/loki/config.yaml"
+  #   # ports:
+  #   #   - 3100:3100
+  #   volumes:
+  #     # - loki-storage:/loki
+  #     - ./loki-config.yaml:/etc/loki/config.yaml
 
-  promtail:
-    container_name: promtail
-    image: grafana/promtail
-    # ports:
-    #   #- 9080:9080
-    volumes:
-      - ./promtail.yaml:/etc/promtail/config.yml:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+  # promtail:
+  #   container_name: promtail
+  #   image: grafana/promtail
+  #   # ports:
+  #   #   #- 9080:9080
+  #   volumes:
+  #     - ./promtail.yaml:/etc/promtail/config.yml:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock
 
   wireguard:
     container_name: wireguard

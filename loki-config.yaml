@@ -27,6 +27,10 @@ schema_config:
 ruler:
   alertmanager_url: http://localhost:9093
 
-table_manager:
-  retention_deletes_enabled: true
-  retention_period: 24h
+compactor:
+  # working_directory: /data/retention
+  compaction_interval: 1m
+  retention_enabled: true
+  retention_delete_delay: 1m
+  retention_delete_worker_count: 150
+  # delete_request_store: gcs
