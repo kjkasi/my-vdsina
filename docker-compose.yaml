@@ -71,6 +71,9 @@ services:
   #     - /var/run/docker.sock:/var/run/docker.sock
 
   wireguard:
+    logging:
+      options:
+        max-size: 10m
     container_name: wireguard
     image: ghcr.io/wg-easy/wg-easy
     environment:
@@ -93,6 +96,9 @@ services:
     restart: unless-stopped
 
   shadowsocks:
+    logging:
+      options:
+        max-size: 10m
     container_name: shadowsocks
     image: ghcr.io/shadowsocks/ssserver-rust
     entrypoint:
@@ -113,6 +119,9 @@ services:
     restart: unless-stopped
 
   torrserver:
+    logging:
+      options:
+        max-size: 10m
     image: ghcr.io/yourok/torrserver
     container_name: torrserver
     environment:
